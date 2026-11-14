@@ -1,0 +1,90 @@
+.listening-line {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  color: var(--color-charcoal);
+  pointer-events: none;
+}
+
+.listening-line__path,
+.listening-line__current {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.listening-line__path {
+  stroke-width: 1.25;
+  opacity: 0.42;
+}
+
+.listening-line__current {
+  stroke: var(--color-lime);
+  stroke-width: 1.7;
+  stroke-dasharray: 1 16;
+  stroke-dashoffset: 0;
+  opacity: 0.8;
+  animation: listening-line-flow 12s linear infinite;
+}
+
+.listening-line__strike {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 42 958;
+  stroke-dashoffset: 1000;
+  opacity: .95;
+  animation: listening-note-travel 1.5s cubic-bezier(.2, .65, .25, 1) both;
+}
+.listening-line__strike--lavender { stroke: #b9a7f5; }
+.listening-line__strike--lime { stroke: var(--color-lime); }
+.listening-line__strike--coral { stroke: var(--color-coral); }
+
+.listening-line__pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: listening-line-breathe 3.8s ease-in-out infinite;
+}
+
+.listening-line__pulse--lavender { fill: var(--color-lavender); }
+.listening-line__pulse--lime { fill: var(--color-lime); }
+.listening-line__pulse--coral { fill: var(--color-coral); }
+.listening-line__pulse--charcoal { fill: var(--color-charcoal); }
+.listening-line__pulse.is-lit {
+  filter: drop-shadow(0 0 5px currentColor);
+  animation: listening-marker-struck 720ms ease-out both;
+}
+
+.listening-line--manifesto { color: var(--color-ivory); }
+.listening-line--manifesto .listening-line__path { opacity: 0.55; }
+.listening-line--manifesto .listening-line__current { stroke: var(--color-lavender); }
+.listening-line--stage-track { width: 4rem; height: 100%; min-height: 15rem; }
+.listening-line--stage-track .listening-line__path { stroke-width: 1.4; opacity: 0.36; }
+.listening-line--stage-track .listening-line__current { stroke: var(--color-charcoal); stroke-width: 1.8; }
+.listening-line--piano-bridge .listening-line__current { stroke: var(--color-charcoal); }
+.listening-line--path-branch .listening-line__current { stroke: var(--color-coral); }
+.listening-line--cta-resolution { color: var(--color-charcoal); }
+.listening-line--cta-resolution .listening-line__current { stroke: var(--color-ivory); }
+
+@keyframes listening-line-flow {
+  to { stroke-dashoffset: -17; }
+}
+
+@keyframes listening-line-breathe {
+  0%, 100% { opacity: 0.75; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@media (max-width: 680px) {
+  .listening-line--stage-track { width: 2.4rem; min-height: 12rem; }
+  .listening-line--path-branch { max-height: 3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listening-line__current,
+  .listening-line__pulse,
+  .listening-line__strike { animation: none; }
+  .listening-line__pulse.is-lit { opacity: 1; transform: scale(1.5); }
+}

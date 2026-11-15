@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node src/modules/music/tests/run-tests.mjs"
   },
   "dependencies": {
     "next": "^15.5.6",

@@ -1,0 +1,13 @@
+.feedback { display: flex; align-items: flex-start; gap: .7rem; margin: 1rem 0 0; border: 1px solid transparent; border-radius: var(--radius-sm); padding: .8rem 1rem; color: var(--color-charcoal); font-weight: 600; line-height: 1.45; }
+.symbol { display: inline-grid; width: 1.35rem; height: 1.35rem; flex: 0 0 auto; place-items: center; border-radius: 50%; font-size: .8rem; font-weight: 800; }
+.success { border-color: var(--color-lime); background: var(--color-lime-soft); }
+.success .symbol { background: var(--color-lime); }
+.error { border-color: var(--color-coral); background: var(--color-coral-soft); }
+.error .symbol { background: var(--color-coral); }
+.neutral { border-color: var(--color-line); background: var(--color-lavender-soft); }
+.neutral .symbol { background: var(--color-lavender); }
+.success .symbol { animation: success-in 220ms cubic-bezier(.2,.75,.25,1) both; }
+.error .symbol { animation: retry-nudge 220ms ease-in-out both; }
+@keyframes success-in { from { scale: .7; rotate: -12deg; } to { scale: 1; rotate: 0deg; } }
+@keyframes retry-nudge { 0%,100% { translate: 0; } 35% { translate: -2px; } 70% { translate: 2px; } }
+@media (prefers-reduced-motion: reduce) { .symbol { animation: none; } }

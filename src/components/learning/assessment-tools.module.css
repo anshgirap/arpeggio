@@ -1,0 +1,38 @@
+.progress {
+  width: 100%;
+  margin: 0 0 1.5rem;
+  color: var(--color-charcoal, #202020);
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .55rem;
+  font-size: .84rem;
+  font-weight: 600;
+}
+
+.progressMeta span:last-child { color: var(--color-ink-muted); font-weight: 500; }
+.track { height: 7px; overflow: hidden; border-radius: 999px; background: var(--color-line); }
+.track span { display: block; height: 100%; border-radius: inherit; background: var(--color-lime); transition: width 220ms ease; }
+
+.complete {
+  display: grid;
+  justify-items: start;
+  gap: .75rem;
+  padding: clamp(1.4rem, 4vw, 2.5rem);
+  border: 1px solid var(--color-line);
+  border-radius: 24px;
+  background: var(--color-cream-secondary);
+}
+
+.mark { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--color-lime); font-size: 1.35rem; font-weight: 700; }
+.kicker { margin: 0; color: var(--color-ink-muted); font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.complete h2 { margin: 0; font-size: clamp(1.65rem, 4vw, 2.25rem); line-height: 1.12; }
+.message, .encouragement { max-width: 42rem; margin: 0; line-height: 1.6; }
+.encouragement { color: var(--color-ink-muted); }
+.continue { min-height: 48px; margin-top: .35rem; padding: .75rem 1.2rem; border: 0; border-radius: 999px; background: var(--color-charcoal); color: var(--color-ivory); font: inherit; font-weight: 650; cursor: pointer; transition: transform 160ms ease, background 160ms ease; }
+.continue:hover { transform: translateY(-1px); background: var(--color-charcoal); }
+.continue:focus-visible { outline: 3px solid var(--color-lavender); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .track span, .continue { transition: none; } }

@@ -21,12 +21,13 @@ try {
     "--strict",
     "--esModuleInterop",
     join(curriculumRoot, "index.ts"),
+    join(curriculumRoot, "persistent-progress.ts"),
   ], { cwd: repositoryRoot, stdio: "inherit" });
 
-  execFileSync(process.execPath, ["--test", join(curriculumRoot, "tests", "curriculum.test.mjs")], {
+  execFileSync(process.execPath, ["--test", join(curriculumRoot, "tests", "curriculum.test.mjs"), join(curriculumRoot, "tests", "progress.test.mjs")], {
     cwd: repositoryRoot,
     stdio: "inherit",
-    env: { ...process.env, ARPEGGIO_CURRICULUM_BUILD: temporaryBuild },
+    env: { ...process.env, ARPEGGIO_CURRICULUM_BUILD: temporaryBuild, ARPEGGIO_PROGRESS_BUILD: join(temporaryBuild, "persistent-progress.js") },
   });
 } finally {
   rmSync(temporaryBuild, { recursive: true, force: true });

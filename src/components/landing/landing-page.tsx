@@ -326,6 +326,8 @@ const stages = [
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<"learn" | "play" | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
   const [demoStopped, setDemoStopped] = useState(false);
   const [notePulse, setNotePulse] = useState<{ note: PianoNote; sequence: number } | null>(null);
   const pulseSequence = useRef(0);
@@ -380,6 +382,21 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
+    const dismissOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !navRef.current?.contains(event.target)) setOpenDropdown(null);
+    };
+    const dismissEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenDropdown(null);
+        navRef.current?.querySelector<HTMLButtonElement>("[aria-expanded='true']")?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("keydown", dismissEscape);
+    return () => { document.removeEventListener("pointerdown", dismissOutside); document.removeEventListener("keydown", dismissEscape); };
+  }, []);
+
+  useEffect(() => {
     const page = pageRef.current;
     if (!page) return;
     const updateVisibility = () => page.classList.toggle("is-document-hidden", document.hidden);
@@ -389,7 +406,11 @@ export default function LandingPage() {
   }, []);
 
   return <main className="landing-page" id="top" ref={pageRef}>
-    <header className="landing-nav wrap"><Link className="landing-wordmark" href="#top" aria-label="ARPEGGIO home"><Image className="landing-logo" src="/brand/arpeggio-logo.png" width={204} height={68} alt="ARPEGGIO" priority /></Link><button className="menu-toggle" aria-expanded={menuOpen} aria-controls="landing-navigation" aria-label="Toggle navigation" onClick={() => setMenuOpen((open) => !open)}><span/><span/></button><nav id="landing-navigation" className={menuOpen ? "landing-links is-open" : "landing-links"} aria-label="Main navigation"><a href="#approach" onClick={() => setMenuOpen(false)}>How it works</a><a href="#paths" onClick={() => setMenuOpen(false)}>Learning paths</a><Link href="/playground" onClick={() => setMenuOpen(false)}>Playground</Link><a href="#about" onClick={() => setMenuOpen(false)}>About</a><a className="login-link" href="#footer">Log in</a><a className="nav-cta" href="#piano">Start learning <span>↗</span></a></nav></header>
+    <header className="landing-nav wrap" ref={navRef}><Link className="landing-wordmark" href="#top" aria-label="ARPEGGIO home"><Image className="landing-logo" src="/brand/arpeggio-logo.png" width={204} height={68} alt="ARPEGGIO" priority /></Link><button className="menu-toggle" aria-expanded={menuOpen} aria-controls="landing-navigation" aria-label="Toggle navigation" onClick={() => { setMenuOpen((open) => !open); setOpenDropdown(null); }}><span/><span/></button><nav id="landing-navigation" className={menuOpen ? "landing-links is-open" : "landing-links"} aria-label="Main navigation">
+      <div className="landing-dropdown"><button type="button" aria-haspopup="true" aria-expanded={openDropdown === "learn"} onClick={() => setOpenDropdown((open) => open === "learn" ? null : "learn")} onKeyDown={(event) => { if (event.key === "ArrowDown") { event.preventDefault(); setOpenDropdown("learn"); requestAnimationFrame(() => navRef.current?.querySelector<HTMLElement>("[data-menu='learn'] a")?.focus()); } }}>Learn <span aria-hidden="true">⌄</span></button>{openDropdown === "learn" ? <div className="landing-dropdown-menu" data-menu="learn" role="menu"><a role="menuitem" href="#paths" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>Learning Paths</a><Link role="menuitem" href="/playground" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>Playground</Link></div> : null}</div>
+      <div className="landing-dropdown"><button type="button" aria-haspopup="true" aria-expanded={openDropdown === "play"} onClick={() => setOpenDropdown((open) => open === "play" ? null : "play")} onKeyDown={(event) => { if (event.key === "ArrowDown") { event.preventDefault(); setOpenDropdown("play"); requestAnimationFrame(() => navRef.current?.querySelector<HTMLElement>("[data-menu='play'] a")?.focus()); } }}>Play <span aria-hidden="true">⌄</span></button>{openDropdown === "play" ? <div className="landing-dropdown-menu" data-menu="play" role="menu"><Link role="menuitem" href="/play/rhythm-rush" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>Rhythm Rush</Link><span role="menuitem" aria-disabled="true">Ear Training <small>Coming soon</small></span><span role="menuitem" aria-disabled="true">Pitch Detective <small>Coming soon</small></span></div> : null}</div>
+      <Link className="landing-sandbox-link" href="/sandbox" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>Sandbox</Link><Link href="/dashboard" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>My Learning</Link><a href="#about" onClick={() => { setOpenDropdown(null); setMenuOpen(false); }}>About</a>
+    </nav></header>
 
     <div className="opening-composition" ref={openingRef}>
       <section className="landing-hero wrap"><div className="hero-editorial"><h1>Understand<br/>music<span className="hero-comma">,</span><br/><em>naturally.</em></h1><p>Discover the language of music through sound, experimentation and play. No overwhelming theory. Just a better way to learn.</p><div className="hero-ctas"><a className="cta-dark" href="#piano">Start learning <span>↗</span></a><a className="cta-text" href="#approach">Explore how it works <span>↓</span></a></div></div><div className="hero-visual"><SoundHalo pulse={notePulse}/><Piano autoDemo demoStopped={demoStopped} audioEngine={audioEngine} onNotePlayed={handleNotePlayed} onDemoResume={resumeDemo}/><div className="visual-caption"><span>Every note has a feeling.</span><span>Start with one.</span></div><div className="hero-staff" aria-hidden="true"><span/><span/><span/><span/><span/></div></div></section>
